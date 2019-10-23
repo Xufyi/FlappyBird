@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        //定义图片数组
+        var imgArr = ['./images/bird0_0.png','./images/bird0_1.png','./images/bird0_2.png','./images/bg_day.png','./images/bg_night.png','./images/pipe_down.png','./images/pipe_up.png']
+        
+        //等待图片加载完成后，执行函数
+        function imgsLoad(imgArr,callback){
+            var idx = 0;    //信号量
+            var arr = []    //图片对象数组
+            imgArr.forEach((item,index)=>{
+                let img = new Image()
+                img.src = item
+                
+                img.onload = function(){
+                    idx ++ 
+                    arr[index] = this.src //因为onload先后不确定，用Index确保数组顺序不因刷新改变
+                    if( idx === imgArr.length){ //全部图片加载完
+                        callback(arr)
+                    } 
+                }
+            })
+        }   
+        
+        imgsLoad(imgArr,(imgArr)=>{
+            imgArr.forEach((item)=>{
+                console.log(item)
+            })
+        })
+
+
+        
+    </script>
+</body>
+</html>
