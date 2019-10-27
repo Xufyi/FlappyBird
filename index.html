@@ -5,13 +5,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <style>
+        .myCanvas{
+            border:1px solid red;
+            margin: 0 auto;
+            display: block;
+        }
+    </style>
 </head>
 <body>
+    <canvas id="myCanvas" class="myCanvas" height="512" width="360"></canvas>
+    <script type="text/javascript" src='js/Background.js'></script>
+    <script type="text/javascript" src='js/Bird.js'></script>
+    <script type="text/javascript" src='js/Game.js'></script>
+    <script type="text/javascript" src='js/Pipe.js'></script>
     <script>
         //定义图片数组
-        var imgArr = ['./images/bird0_0.png','./images/bird0_1.png','./images/bird0_2.png','./images/bg_day.png','./images/bg_night.png','./images/pipe_down.png','./images/pipe_up.png']
+        var imgArr = ['./images/bird0_0.png','./images/bird0_1.png','./images/bird0_2.png','./images/bg_day.png','./images/bg_night.png','./images/pipe_down.png','./images/pipe_up.png','./images/land.png']
         
+
+
+
+
+        imgsLoad(imgArr,function(imgLoadArr){
+            // console.log(typeof imgLoadArr)
+            //画笔
+            var canvas = document.getElementById('myCanvas')
+            var ctx = canvas.getContext('2d')
+            //管子
+            var pipe = new Pipe() 
+            //鸟
+            var bird = new Bird()
+            //山
+            var mountain = new Background(imgLoadArr.slice(3,4),0,0,4)
+            //地
+            var land = new Background(imgLoadArr.slice(7),0,400,6)
+             //游戏
+            window.g = new Game(ctx,bird,pipe,mountain,land)
+        })
+        // console.log(g)
+
+
+
+
+
+
+
         //等待图片加载完成后，执行函数
+        //方法2，使用forEach循环
         function imgsLoad(imgArr,callback){
             var idx = 0;    //信号量
             var arr = []    //图片对象数组
@@ -21,19 +62,41 @@
                 
                 img.onload = function(){
                     idx ++ 
-                    arr[index] = this.src //因为onload先后不确定，用Index确保数组顺序不因刷新改变
+                    arr[index] = this 
+                    // console.log( arr[index])
                     if( idx === imgArr.length){ //全部图片加载完
                         callback(arr)
                     } 
                 }
             })
-        }   
+        }
+
+        //方法1，使用for循环
+        // function imgsLoad(imgArr,callback){
+        //     var idx = 0;    //信号量
+        //     var arr = []    //图片对象数组
+
+        //     for(let i = 0 ;i<imgArr.length;i++){
+        //         let img = new Image()
+        //         img.src = imgArr[i]
+                
+        //         img.onload = function(){
+        //             idx ++ 
+        //             console.log(i)
+        //             arr[i] = this
+        //             //因为onload先后不确定，用Index确保数组顺序不因刷新改变顺序。所以要想办法把当前i保存起来。
+        //             if( idx === imgArr.length){ //全部图片加载完
+        //                 callback(arr)
+        //             } 
+        //         }
+        //     } 
+        // }   
         
-        imgsLoad(imgArr,(imgArr)=>{
-            imgArr.forEach((item)=>{
-                console.log(item)
-            })
-        })
+        // imgsLoad(imgArr,(imgArr)=>{
+        //     imgArr.forEach((item)=>{
+        //         console.log(item)
+        //     })
+        // })
 
 
         
